@@ -4,15 +4,16 @@ import { db } from "~/server/db";
 
 export const dynamic = "force-dynamic";
 
-interface Post {
+interface Image {
   id: number;
   name: string;
+  url: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export default async function HomePage() {
-  let images: Post[] = [];
+  let images: Image[] = [];
   try {
     images = await db.query.images.findMany({
       orderBy: (model, { desc }) => desc(model.id),
@@ -24,8 +25,8 @@ export default async function HomePage() {
   async function Images() {
     return (
       <div className="flex flex-wrap gap-4">
-        {[...images, ...images, ...images].map((image, index) => (
-          <div key={image.id + "=" + index} className="flex flex-col gap-2">
+        {images.map((image) => (
+          <div key={image.id} className="flex flex-col gap-2">
             <div className="w-48">
               <img src={image.url} alt="image" />
             </div>

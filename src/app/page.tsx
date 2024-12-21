@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SignedOut, SignedIn } from "@clerk/nextjs";
 import { db } from "~/server/db";
 
 export const dynamic = "force-dynamic";
@@ -20,9 +21,8 @@ export default async function HomePage() {
     console.error("Failed to fetch images:", error);
   }
 
-  console.log("images: ", images);
-  return (
-    <main className="">
+  async function Images() {
+    return (
       <div className="flex flex-wrap gap-4">
         {[...images, ...images, ...images].map((image, index) => (
           <div key={image.id + "=" + index} className="flex flex-col gap-2">
@@ -33,7 +33,16 @@ export default async function HomePage() {
           </div>
         ))}
       </div>
-      Hello (gallery in progress)
+    );
+  }
+
+  console.log("images: ", images);
+  return (
+    <main className="">
+      <SignedOut>
+        <div className="h-full w-full text-2xl">Please sign in</div>
+      </SignedOut>
+      <SignedIn>{Images()}</SignedIn>
     </main>
   );
 }
